@@ -13,10 +13,31 @@ private:
 
     // Reallocate the array to newCapacity
     void resizeBuffer(int newCapacity) {
-        // TODO: Allocate a new array of length newCapacity.
-        // TODO: Copy existing elements (in FIFO order) into it.
-        // TODO: Reset iFront and iRear accordingly.
-        // TODO: Delete old array and update current_capacity.
+        //Allocate a new array of length newCapacity.
+        if(newCapacity < init_capacity){
+        	cout<<"Cannot shrink array past original size."<<endl;
+        	return;
+		}
+        int* arr = new int[newCapacity];
+
+        
+        //Copy existing elements (in FIFO order) into it.
+        int node = iFront;
+        for(int i = 0; i < size; i++){
+        	arr[i] = items[node];
+        	node = (node+1)%current_capacity;
+		}
+        
+        //Reset iFront and iRear accordingly.
+        
+        iFront = 0;
+        iRear = size;
+        
+        // Delete old array and update current_capacity.
+        
+        delete [] items;
+        items = arr;
+        current_capacity = newCapacity;
     }
 
 public:
@@ -31,25 +52,62 @@ public:
 };
 
 Queue::Queue(int cap) {
-    // TODO: Initialize init_capacity and current_capacity (minimum 1).
-    // TODO: Set size, iFront, iRear to 0.
-    // TODO: Allocate items array of length current_capacity.
+    // Initialize init_capacity and current_capacity (minimum 1).
+    if (cap >= 1){
+    	init_capacity = cap;
+    	current_capacity = cap;
+	}
+	else {
+		cout << "cannot have capacity smaller than 0, set to 1" << endl;
+		init_capacity = 1;
+		current_capacity = 1;
+	}
+    // Set size, iFront, iRear to 0.
+    iFront = 0;
+    iRear = 0;
+    size = 0;
+    // Allocate items array of length current_capacity.
+    items = new int[current_capacity];
 }
 
 Queue::~Queue() {
-    // TODO: Deallocate the items array.
+    // Deallocate the items array.
+    delete [] items;
+    items = nullptr;
 }
 
 void Queue::enqueue(int x) {
     // TODO: If full, call resizeBuffer to double capacity.
+    if(size == current_capacity){
+    	resizeBuffer(current_capacity*2);
+    	cout << "Capacity Doubled" << endl;
+	}
     // TODO: Insert x at iRear (circular) and increment size.
+    items[iRear] = x;
+    iRear = (iRear + 1) % current_capacity;
+    size++;
 }
 
 int Queue::dequeue() {
     // TODO: If empty, print message and return a sentinel.
-    // TODO: Otherwise, remove front element, adjust iFront and size.
-    // TODO: If usage drops to ≤ 1/4 of capacity and can shrink, call resizeBuffer to halve.
-    return -999999; // placeholder
+    if(size == 0){
+    	cout << "The queue is empty." << endl;
+    	return INT_MIN;
+	}
+
+	// TODO: Otherwise, remove front element, adjust iFront and size.
+	int value = items[iFront];
+	iFront = (iFront + 1) % current_capacity;
+	size--;
+	
+	// TODO: If usage drops to ≤ 1/4 of capacity and can shrink, call resizeBuffer to halve.
+	if(size <= current_capacity/4){
+		resizeBuffer(current_capacity/2);
+	}	
+    
+    
+    
+    return value; 
 }
 
 int Queue::peek() {
