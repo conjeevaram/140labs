@@ -58,7 +58,21 @@ bool MinHeap::Enqueue(Call call) {
 
 Call MinHeap::Dequeue() {
     // TODO: Remove and return root call (min priority), call ReheapDown
-    return Call(-999, 0, 0, "EMPTY");
+    if (size == 0){
+        return Call(-999, 0, 0, "EMPTY");
+    }
+    //store the value of the node to be returned in a temp call struct 
+    Call temp = elements[1]; 
+
+    //move the last node in the heap to the top of the heap 
+    elements[1] = elements[size]; 
+
+    size --; 
+
+    ReheapDown(1);  //from root node, index 1
+
+    return temp;
+   
 }
 
 void MinHeap::ReheapUp(int index) {
