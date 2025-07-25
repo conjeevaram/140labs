@@ -15,7 +15,7 @@ struct Call {
         : id(id), severity(severity), waitTime(waitTime), location(location) {}
 
     int getPriority() const {
-        return severity * 10 - waitTime;
+        return severity * 10 - waitTime * waitTime;
     }
 
     void print() const {
@@ -100,8 +100,9 @@ int main() {
         cout << "\n--- Emergency Dispatch System ---\n";
         cout << "1. Add Emergency Call\n";
         cout << "2. Update Wait Times + Dispatch\n";
-        cout << "3. Print Call Queue\n";
-        cout << "4. Exit\n";
+        cout << "3. Change Severity of Call by ID\n";
+        cout << "4. Print Call Queue\n";
+        cout << "5. Exit\n";
         cout << "Choose: ";
         cin >> choice;
 
@@ -128,9 +129,19 @@ int main() {
                 cout << "No calls to dispatch.\n";
             }
         } else if (choice == 3) {
+            int id, newSeverity;
+            cout << "Enter Call ID to update: ";
+            cin >> id;
+            cout << "Enter new severity (1-10): ";
+            cin >> newSeverity;
+            if (!dispatch.updateCall(id, newSeverity))
+                cout << "Call not found.\n";
+            else
+                cout << "Severity updated.\n";
+        } else if (choice == 4) {
             cout << "\n--- Current Call Queue ---\n";
             dispatch.printAll();
-        } else if (choice == 4) {
+        } else if (choice == 5) {
             cout << "Exiting...\n";
             break;
         } else {
