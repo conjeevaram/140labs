@@ -81,10 +81,64 @@ void MinHeap::ReheapUp(int index) {
 
 void MinHeap::ReheapDown(int index) {
     // TODO: Maintain heap by swapping downward
+    
+    //returns if the node inputted has no children (leaf)
+    if(2 * index > size) {
+    	return;
+	}
+	
+	//create an integer to hold the smallest Child
+	int smallestChild;
+	
+	//if only one child 
+	if(2 * index == size) {
+		smallestChild = size;
+	} 
+	else {
+		int leftChild = 2 * index;
+		int rightChild = 2 * index + 1;
+		if(elements[leftChild].getPriority() <= elements[rightChild].getPriority()) {
+			smallestChild = leftChild;
+		}
+		else {
+			smallestChild = rightChild;
+		}
+	}
+	
+	//perform swap if child has lower priority than node
+	if(elements[smallestChild].getPriority() < elements[index].getPriority()) {
+		
+		//store id values prior to swap
+		int id1 = elements[index].id;
+		int id2 = elements[smallestChild].id;
+		
+		Call temp = elements[smallestChild];
+		elements[smallestChild] = elements[index];
+		elements[index] = temp;
+		
+		//update hash map 
+		idToIndex[id1] = smallestChild;
+		idToIndex[id2] = index;
+		
+		//continue to reheap downwards (recursive)
+		ReheapDown(smallestChild);
+	}
 }
 
 void MinHeap::updateWaitTimes() {
     // TODO: Increment waitTime for all calls, update priorities
+    
+    //Increments waitTime for all calls currently stored in the vector
+    for(int i = 1; i <= size; i++)
+    {
+    	elements[i].waitTime += 1;
+	}
+	
+	//start at index of the last non-leaf node, and move up to the root
+	for(int i = size / 2; i >= 1; i--)
+	{
+		ReheapDown(i);
+	}
 }
 
 void MinHeap::printAll() {
