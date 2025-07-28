@@ -85,7 +85,35 @@ Call MinHeap::Dequeue() {
 }
 
 void MinHeap::ReheapUp(int index) {
-    // TODO: Maintain heap by swapping upward
+	// TODO: Maintain heap by swapping upward
+
+	//if the checked node reaches the root node then return
+	if(index == 1) {
+		return;
+	}
+
+	//Create an integer to hold the parent node
+	int parent = index/2;
+
+	//perform swap if index has lower priority than parent
+	if(elements[index].getPriority() < elements[parent].getPriority()) {
+		int id1 = elements[index].id;
+		int id2 = elements[parent].id;
+
+		Call temp = elements[parent];
+		elements[parent] = elements[index];
+		elements[index] = temp;
+
+		//update hash map
+		idToIndex[id1] = parent;
+		idToIndex[id2] = index;
+
+		//continue to reheap upwards (recursive)
+		ReheapUp(parent);
+
+	}
+
+
 }
 
 void MinHeap::ReheapDown(int index) {
