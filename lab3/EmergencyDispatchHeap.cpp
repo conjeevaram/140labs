@@ -52,8 +52,17 @@ MinHeap::MinHeap() {
 }
 
 bool MinHeap::Enqueue(Call call) {
-    // TODO: Insert call, update idToIndex, call ReheapUp
-    return false;
+    // add new call to the end of heap
+    elements.push_back(call);
+    size++;
+    
+    // update hash map with new call
+    idToIndex[call.id] = size;
+    
+    // reheaping
+    ReheapUp(size);
+    
+    return true;
 }
 
 Call MinHeap::Dequeue() {
