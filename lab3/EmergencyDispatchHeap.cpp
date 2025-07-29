@@ -194,7 +194,31 @@ int MinHeap::getSize() {
 
 bool MinHeap::updateCall(int callID, int newSeverity) {
     // TODO: Update severity of a specific call and reheap
-    return false;
+    if(idToIndex.find(callID) == idToIndex.end())
+    {
+    	return false;
+	}
+	
+    
+    
+    int index = idToIndex[callID];
+    
+    int lastPriority = elements[index].getPriority();
+    
+    elements[index].severity = newSeverity;
+    
+    int newPriority = elements[index].getPriority();
+    
+    if(lastPriority > newPriority)
+    {
+    	ReheapUp(index);
+	}
+	else
+	{
+		ReheapDown(index);
+	}
+    
+    return true;
 }
 
 int main() {
